@@ -26,30 +26,3 @@ pub fn sort_buckets(a_bucket: Bucket, b_bucket: Bucket) -> (Bucket, Bucket) {
     }
     (b_bucket, a_bucket)
 }
-
-pub fn assert_components_are_approved(
-    metadata_key: &str,
-    component_addresses: Vec<ComponentAddress>,
-) {
-    let metadata_package_addresses = package_addresses_from_metadata(&metadata_key);
-
-    for component_address in component_addresses {
-        let blueprint_id = ScryptoVmV1Api::object_get_blueprint_id(&component_address.into());
-        assert!(
-            metadata_package_addresses.contains(&blueprint_id.package_address),
-            "The package address of {} is not approved under the key {} in the pool package metadata.",
-            Runtime::bech32_encode_address(component_address),
-            metadata_key
-        );
-    }
-}
-
-pub fn package_addresses_from_metadata(key: &str) -> Vec<PackageAddress> {
-    let own_package: Package = Runtime::package_address().into();
-    let metadata_value: Option<Vec<GlobalAddress>> = own_package.get_metadata(key).ok().flatten();
-    metadata_value
-        .into_iter()
-        .flatten()
-        .filter_map(|address| address.try_into().ok())
-        .collect()
-}
