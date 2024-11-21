@@ -46,3 +46,13 @@ where
         .filter_map(|address| address.try_into().ok())
         .collect()
 }
+
+pub fn address_from_metadata<T>(key: &str) -> Option<T>
+where
+    T: TryFrom<GlobalAddress>,
+{
+    let own_package: Package = Runtime::package_address().into();
+    let metadata_value: Option<GlobalAddress> = own_package.get_metadata(key).ok().flatten();
+
+    metadata_value.and_then(|address| address.try_into().ok())
+}
