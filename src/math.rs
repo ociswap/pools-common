@@ -5,7 +5,7 @@ pub trait AttoDecimal {
 }
 
 impl AttoDecimal for Decimal {
-    const ATTO: Self = Self(I192::ONE);
+    const ATTO: Self = Self::from_attos(I192::ONE);
 }
 
 pub trait AttoPreciseDecimal {
@@ -13,7 +13,7 @@ pub trait AttoPreciseDecimal {
 }
 
 impl AttoPreciseDecimal for PreciseDecimal {
-    const ATTO: Self = Self(I256::ONE);
+    const ATTO: Self = Self::from_precise_subunits(I256::ONE);
 }
 
 pub trait DivisibilityRounding {
